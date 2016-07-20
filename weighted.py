@@ -228,7 +228,7 @@ def single_source_dijkstra_path_length(G, source, cutoff=None,
     return _dijkstra(G, source, get_weight, cutoff=cutoff)
 
 
-def single_source_dijkstra(G, source, target=None, cutoff=None, weight='weight'):
+def single_source_dijkstra(G, source, target=None, cutoff=None, Noff=None, weight='weight'):
     """Compute shortest paths and lengths in a weighted graph G.
 
     Uses Dijkstra's algorithm for shortest paths.
@@ -292,11 +292,11 @@ def single_source_dijkstra(G, source, target=None, cutoff=None, weight='weight')
         get_weight = lambda u, v, data: data.get(weight, 1)
 
     paths = {source: [source]}  # dictionary of paths
-    return _dijkstra(G, source, get_weight, paths=paths, cutoff=cutoff,
+    return _dijkstra(G, source, get_weight, paths=paths, cutoff=cutoff, Noff=Noff,
                      target=target)
 
 
-def _dijkstra(G, source, get_weight, pred=None, paths=None, cutoff=None,
+def _dijkstra(G, source, get_weight, pred=None, paths=None, cutoff=None, Noff=None,
               target=None):
     """Implementation of Dijkstra's algorithm
 
@@ -350,6 +350,11 @@ def _dijkstra(G, source, get_weight, pred=None, paths=None, cutoff=None,
         if v in dist:
             continue  # already searched this node.
         dist[v] = d
+
+        if Noff is not None:
+            if len(dist)>=Noff:
+                break
+
         if v == target:
             break
 
